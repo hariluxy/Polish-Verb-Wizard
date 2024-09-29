@@ -8,7 +8,7 @@ from conjugation import find_present_conjugations  # Import the conjugation func
 class VerbClassifierGUI:
     def __init__(self, root):
         self.root = root
-        self.root.title("Polish Verb Wizard 2.0")
+        self.root.title("Polish Verb Wizard")
         
         # Variable to store the conjugation checkbox value
         self.include_conjugations = tk.BooleanVar()
