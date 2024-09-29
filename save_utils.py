@@ -30,11 +30,7 @@ def save_results(classified_verbs, conjugations, file_path, include_conjugations
         
         file.write("\nUnknown Verbs:\n")
         for verb in classified_verbs["unknown"]:  
-            if include_conjugations and verb in conjugations:
-                conj1, conj2 = conjugations[verb]
-                file.write(f"{verb};{conj1};{conj2}\n")
-            else:
-                file.write(f"{verb}\n")
+            file.write(f"{verb}\n")
 
 def save_results_custom_format(classified_verbs, conjugations, file_path):
     """
@@ -59,6 +55,4 @@ def save_results_custom_format(classified_verbs, conjugations, file_path):
                 file.write(f"{verb};both;{conj1};{conj2}\n")
 
         for verb in classified_verbs["unknown"]:
-            if verb in conjugations:
-                conj1, conj2 = conjugations[verb]
-                file.write(f"{verb};unknown;{conj1};{conj2}\n")
+            file.write(f"{verb};unknown\n")
