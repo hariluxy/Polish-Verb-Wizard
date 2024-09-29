@@ -1,3 +1,0 @@
-pip install morfeusz2
-
-morfeusz2: For morphological analysis.
