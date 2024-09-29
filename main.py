@@ -1,12 +1,11 @@
-import tkinter as tk
-from gui import VerbClassifierGUI # Import the GUI class from gui.py
+from gui import PolishVerbWizard
+from tkinter import Tk
 
 def main():
-    # Initialize the Tkinter window and launch the GUI
-    root = tk.Tk()
-    app = VerbClassifierGUI(root) # Create an instance of the VerbClassifierApp GUI
-    root.geometry("400x200")
-    root.mainloop()  # Start the Tkinter main event loop
+    # Start the GUI
+    window = Tk()
+    app = PolishVerbWizard(window)
+    window.mainloop()
 
 if __name__ == "__main__":
-    main()  # Call the main function to launch the program
+    main()

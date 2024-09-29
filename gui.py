@@ -1,97 +1,59 @@
-import tkinter as tk
+from tkinter import *
 from tkinter import filedialog
-from tkinter import messagebox
+from process import process_verbs  # Import process_verbs from process.py
 import os
-from classifier import classify_verbs  # Assuming the classifier function is in classifier.py
-from conjugation import find_present_conjugations  # Import the conjugation function from open.py
 
-class VerbClassifierGUI:
-    def __init__(self, root):
-        self.root = root
-        self.root.title("Polish Verb Wizard")
-        
-        # Variable to store the conjugation checkbox value
-        self.include_conjugations = tk.BooleanVar()
-        
-        self.load_button = tk.Button(self.root, text="Load Verbs", command=self.load_verbs)
-        self.load_button.pack()
+class PolishVerbWizard:
+    def __init__(self, window):
+        self.window = window
+        self.window.title("Polish Verb Wizard")
 
-        self.classify_button = tk.Button(self.root, text="Classify Verbs", command=self.classify_verbs)
-        self.classify_button.pack()
+        # Variables
+        self.input_file = None
+        self.output_file = None
+        self.include_conjugations = BooleanVar()
 
-        self.save_button = tk.Button(self.root, text="Save Results", command=self.save_results)
-        self.save_button.pack()
-        
-        # Checkbox for conjugation analysis
-        self.conjugation_checkbox = tk.Checkbutton(self.root, text="Include Conjugations", variable=self.include_conjugations)
+        # GUI Elements
+        Label(window, text="Polish Verb Classification").pack()
+
+        # Load file button
+        Button(window, text="Load Verbs from .txt", command=self.load_file).pack()
+
+        # Save file button
+        Button(window, text="Choose where to save results", command=self.save_file).pack()
+
+        # Checkbox for conjugations
+        self.conjugation_checkbox = Checkbutton(window, text="Include Conjugations", variable=self.include_conjugations)
         self.conjugation_checkbox.pack()
 
-        self.verb_list = None
-        self.classification_results = None
-        self.conjugation_results = {}
+        # Run button
+        Button(window, text="Run", command=self.run_classification).pack()
+
+    def load_file(self):
+        """
+        Opens a dialog to load a file containing the list of verbs.
+        """
+        self.input_file = filedialog.askopenfilename(title="Select Verbs File", filetypes=[("Text Files", "*.txt")])
+        if self.input_file:
+            print(f"Loaded file: {self.input_file}")
+
+    def save_file(self):
+        """
+        Opens a dialog to choose where to save the result file.
+        """
+        self.output_file = filedialog.asksaveasfilename(title="Select Location to Save Results", defaultextension=".txt", filetypes=[("Text Files", "*.txt")])
+        if self.output_file:
+            print(f"Saving results to: {self.output_file}")
+
+    def run_classification(self):
+        """
+        Runs the verb classification process, using morfeusz2 for classification and 
+        adding conjugations if the checkbox is selected.
+        """
+        if not self.input_file or not self.output_file:
+            print("Please select both input and output files.")
+            return
         
-        # Path to the PoliMorf conjugation file (assumes it's in the program's directory)
-        self.conjugation_file_path = os.path.join(os.path.dirname(__file__), "PoliMorf-0.6.7.tab")
-
-    def load_verbs(self):
-        file_path = filedialog.askopenfilename(filetypes=[("Text files", "*.txt")])
-        if file_path:
-            with open(file_path, 'r', encoding='utf-8') as file:
-                self.verb_list = file.read().splitlines()
-            messagebox.showinfo("Info", "Verbs have been loaded successfully.")
-
-    def classify_verbs(self):
-        if self.verb_list is None:
-            messagebox.showwarning("Warning", "Please load verbs before classifying.")
-            return
-
-        self.classification_results = classify_verbs(self.verb_list)
-
-        # If the conjugation checkbox is checked, perform conjugation analysis
-        if self.include_conjugations.get():
-            if os.path.exists(self.conjugation_file_path):
-                for verb in self.verb_list:
-                    first_person, third_person = find_present_conjugations(verb, self.conjugation_file_path)
-                    if first_person and third_person:
-                        self.conjugation_results[verb] = (first_person, third_person)
-                    else:
-                        self.conjugation_results[verb] = ("N/A", "N/A")
-            else:
-                messagebox.showwarning("Warning", f"Conjugation data file not found: {self.conjugation_file_path}")
-                return
-
-        messagebox.showinfo("Info", "Verbs have been classified successfully.")
-
-    def save_results(self):
-        if self.classification_results is None:
-            messagebox.showwarning("Warning", "Please classify verbs before saving.")
-            return
-
-        save_path = filedialog.askdirectory()
-        if save_path:
-            result_file_path = os.path.join(save_path, "results.txt")
-            with open(result_file_path, 'w', encoding='utf-8') as result_file:
-                for aspect, verbs in self.classification_results.items():
-                    result_file.write(f"{aspect.capitalize()} Verbs:\n")
-                    for verb in verbs:
-                        result_file.write(f"{verb}")
-                        
-                        # Provide conjugation data only for non-unknown aspects
-                        if aspect != "unknown" and self.include_conjugations.get() and verb in self.conjugation_results:
-                            first_person, third_person = self.conjugation_results[verb]
-                            # Only write conjugation if it's available
-                            if first_person != "N/A" and third_person != "N/A":
-                                result_file.write(f" - {first_person}, {third_person}\n")
-                            else:
-                                result_file.write("\n")  # No conjugation available
-                        else:
-                            result_file.write("\n")  # If the verb is in "Unknown" or no conjugation needed
-                        
-                    result_file.write("\n")
-
-        messagebox.showinfo("Info", f"Results have been saved to {result_file_path}")
-
-if __name__ == "__main__":
-    root = tk.Tk()
-    app = VerbClassifierGUI(root)
-    root.mainloop()
+        include_conjugations = self.include_conjugations.get()
+        process_verbs(self.input_file, self.output_file, include_conjugations)
+        print("Classification completed and results saved.")
