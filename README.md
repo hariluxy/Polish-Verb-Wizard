@@ -1,24 +1,35 @@
 # Polish Verb Wizard
 
-**Note:** The Polish Verb Wizard is currently under development. It is only capable of performing two tasks as of now:
+**Simplify Polish Verb Classification and Conjugation Learning**
 
-1. **Verb Classification**:
+## 📖 Introduction
 
-   - Given a file with a list of verbs in polish, It will analyze this list and output a results.txt. In this file, the provided verbs will be classified into four verb groups:
+Are you learning Polish and struggling with the complexities of verb aspects and conjugations? **Polish Verb Wizard** is here to help! This simple program automates the classification of Polish verbs and assists you in understanding their conjugation patterns, making your language learning journey smoother and more efficient.
+
+## 🚀 Features
+
+1. **Verb Classification**
+
+   - **Automatic Analysis**: Input a file containing a list of Polish verbs in infinitive, and the program will analyze each one.
+   - **Detailed Categorization**: Generates a `results.txt` file where verbs are sorted into four categories:
      - **Imperfective**
      - **Perfective**
-     - **Both**
-     - **Unrecognized**
+     - **Both** (verbs that can be both imperfective and perfective)
+     - **Unrecognized** (verbs that couldn't be classified)
 
-2. **Conjugation Patterns Learning**:
+2. **Conjugation Patterns Learning**
 
-   - If the user checks a box in the GUI. The program will provide the same output but this time with extra information next to the verbs. The conjugation of these verbs in first and third person of the    present singular. These two conjugations will provide the required information for polish learners to determine to which conjugation group they belong
+   - **Enhanced Learning Mode**: By selecting an option in the GUI, the program provides additional conjugation information.
+   - **Conjugation Details**: Outputs the first and third person singular forms in the present tense. This information helps learners identify the conjugation group of each verb and their patterns.
 
-## Installation
+## 🛠 Installation
 
-To install the necessary dependencies, simply run the following command:
+First, install the necessary dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
-
+Second, proceed to execute:
+```bash
+python main.py
+```
