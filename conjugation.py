@@ -16,7 +16,7 @@ def load_fast_conjugation_data():
                 conjugations[infinitive] = (conj1, conj2)
     return conjugations
 
-def get_conjugation_from_fast_data(verb, conjugations):
+def get_conjugation(verb, conjugations):
     """
     Retrieves the conjugation for a verb from the fast conjugation dataset.
     If the verb is not found, return (None, None). ???

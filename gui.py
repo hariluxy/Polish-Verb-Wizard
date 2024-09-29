@@ -1,78 +1,73 @@
-from tkinter import *
-from tkinter import filedialog
-from process import process_verbs  # Import process_verbs from process.py
-import os
+import tkinter as tk
+from tkinter import filedialog, messagebox
+from process import process_verbs_and_save
 
 class PolishVerbWizard:
-    def __init__(self, window):
-        self.window = window
-        self.window.title("Polish Verb Wizard")
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Polish Verb Wizard")
 
-        # Variables
-        self.input_file = None
-        self.output_file = None
-        self.include_conjugations = BooleanVar()
-        self.custom_format = BooleanVar()  # New variable for custom format
+        # Label for loading verb file
+        self.load_file_label = tk.Label(root, text="1. Load a .txt file with verbs:")
+        self.load_file_label.grid(row=0, column=0, padx=10, pady=10, sticky="w")
 
-        # GUI Elements
-        Label(window, text="Polish Verb Wizard").pack()
+        # Button to load the verb file
+        self.load_file_button = tk.Button(root, text="Load .txt file", command=self.load_verb_file)
+        self.load_file_button.grid(row=0, column=1, padx=10, pady=10)
 
-        # Load file button
-        Button(window, text="Load Verbs (.txt)", command=self.load_file).pack()
+        # Label for selecting the destination folder
+        self.save_folder_label = tk.Label(root, text="2. Select where to save the result files:")
+        self.save_folder_label.grid(row=1, column=0, padx=10, pady=10, sticky="w")
 
-        # Save file button
-        Button(window, text="Destination Folder", command=self.save_file).pack()
+        # Button to select the save folder
+        self.save_folder_button = tk.Button(root, text="Select Folder", command=self.select_save_folder)
+        self.save_folder_button.grid(row=1, column=1, padx=10, pady=10)
 
-        # Checkbox for conjugations
-        self.conjugation_checkbox = Checkbutton(window, text="Include Conjugations", variable=self.include_conjugations)
-        self.conjugation_checkbox.pack()
+        # Button to run the process
+        self.run_button = tk.Button(root, text="Generate Results", command=self.run_process)
+        self.run_button.grid(row=2, column=0, columnspan=2, pady=20)
 
-        # Checkbox for custom format
-        self.custom_format_checkbox = Checkbutton(window, text="Save in CSS Format", variable=self.custom_format)
-        self.custom_format_checkbox.pack()
+        # Variables to hold file path and save directory
+        self.verb_file_path = None
+        self.save_folder_path = None
 
-        # Run button
-        Button(window, text="Run", command=self.run_classification).pack()
-
-    def load_file(self):
-        """
-        Opens a dialog to load a file containing the list of verbs.
-        """
-        self.input_file = filedialog.askopenfilename(title="Select Verbs File", filetypes=[("Text Files", "*.txt")])
-        if self.input_file:
-            print(f"Loaded file: {self.input_file}")
-
-    def save_file(self):
-        """
-        Opens a dialog to choose where to save the result file.
-        """
-        self.output_file = filedialog.asksaveasfilename(title="Select Location to Save Results", defaultextension=".txt", filetypes=[("Text Files", "*.txt")])
-        if self.output_file:
-            print(f"Saving results to: {self.output_file}")
-
-    def run_classification(self):
-        """
-        Runs the verb classification process, using morfeusz2 for classification and 
-        adding conjugations if the checkbox is selected.
-        """
-        if not self.input_file or not self.output_file:
-            print("Please select both input and output files.")
-            return
-        
-        include_conjugations = self.include_conjugations.get()
-        use_custom_format = self.custom_format.get()  # Check if custom format is selected
-
-        # Read input file to check if it is empty
-        with open(self.input_file, 'r', encoding='utf-8') as file:
-            if not file.read().strip():
-                print("Input file is empty.")
-                return
-            
-        # Check which format to use
-        if use_custom_format:
-            process_verbs(self.input_file, self.output_file, include_conjugations, custom_format=True)
+    def load_verb_file(self):
+        """Allows the user to load a verb .txt file"""
+        self.verb_file_path = filedialog.askopenfilename(
+            title="Select Verb File",
+            filetypes=(("Text Files", "*.txt"),)
+        )
+        if self.verb_file_path:
+            messagebox.showinfo("File Loaded", f"Loaded: {self.verb_file_path}")
         else:
-            process_verbs(self.input_file, self.output_file, include_conjugations, custom_format=False)
-        print("Classification completed and results saved.")
+            messagebox.showwarning("No File", "Please select a file.")
 
+    def select_save_folder(self):
+        """Allows the user to select a folder where results will be saved"""
+        self.save_folder_path = filedialog.askdirectory(title="Select Save Folder")
+        if self.save_folder_path:
+            messagebox.showinfo("Folder Selected", f"Files will be saved to: {self.save_folder_path}")
+        else:
+            messagebox.showwarning("No Folder", "Please select a folder.")
 
+    def run_process(self):
+        """Runs the verb processing and saves the results"""
+        if not self.verb_file_path:
+            messagebox.showerror("Error", "Please load a verb .txt file first.")
+            return
+        if not self.save_folder_path:
+            messagebox.showerror("Error", "Please select a folder to save the results.")
+            return
+
+        # Call the processing function with the verb file and save folder
+        try:
+            process_verbs_and_save(self.verb_file_path, self.save_folder_path)
+            messagebox.showinfo("Success", "Results generated and saved successfully.")
+        except Exception as e:
+            messagebox.showerror("Error", f"An error occurred: {e}")
+
+# Running the GUI
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = PolishVerbWizard(root)
+    root.mainloop()
