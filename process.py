@@ -1,8 +1,8 @@
 from classifier import classify_verbs
 from conjugation import load_fast_conjugation_data, get_conjugation_from_fast_data
-from save_utils import save_results
+from save_utils import save_results, save_results_custom_format
 
-def process_verbs(input_file, output_file, include_conjugations):
+def process_verbs(input_file, output_file, include_conjugations, custom_format=False):
     """
     Processes verbs from the input file, classifies them, and optionally adds conjugations.
     
@@ -26,5 +26,9 @@ def process_verbs(input_file, output_file, include_conjugations):
             conj1, conj2 = get_conjugation_from_fast_data(verb, fast_conjugations)
             conjugations[verb] = (conj1, conj2)
 
-    # Save the results
-    save_results(classified_verbs, conjugations, output_file, include_conjugations)
+    # Save the results in custom format if the custom_format flag is True
+    if custom_format:
+        save_results_custom_format(classified_verbs, conjugations, output_file)
+    else:
+        save_results(classified_verbs, conjugations, output_file, include_conjugations)
+
