@@ -1,34 +1,25 @@
 from classifier import classify_verbs
-from conjugation import load_fast_conjugation_data, get_conjugation_from_fast_data
-from save_utils import save_results, save_results_custom_format
+from conjugation import get_conjugation, load_fast_conjugation_data
+from save_utils import save_all_classifications
 
-def process_verbs(input_file, output_file, include_conjugations, custom_format=False):
+def process_verbs_and_save(verb_file_path, destination_folder):
     """
-    Processes verbs from the input file, classifies them, and optionally adds conjugations.
-    
-    Saves the results to the output file.
+    Processes the verbs from the input file and saves the results in three formats.
+    :param verb_file_path: Path to the file containing the list of verbs.
+    :param destination_folder: Folder where the result files will be saved.
     """
-    # Load the fast conjugation dataset
-    fast_conjugations = load_fast_conjugation_data()
+    # Read verbs from the input file
+    with open(verb_file_path, 'r', encoding='utf-8') as file:
+        verbs = [line.strip() for line in file.readlines() if line.strip()]
 
-    # Read verbs from input file
-    with open(input_file, 'r', encoding='utf-8') as file:
-        verb_list = [line.strip() for line in file.readlines()]
+    # Classify the verbs
+    classified_verbs = classify_verbs(verbs)
 
-    # Classify the verbs using the classify_verbs function
-    classified_verbs = classify_verbs(verb_list)
+    # Load conjugation data
+    conjugations = load_fast_conjugation_data()
 
-    conjugations = {}
+    # Conjugate the verbs
+    verb_conjugations = {verb: get_conjugation(verb, conjugations) for verb in verbs}
 
-    # Add conjugations for each verb if the box was checked
-    if include_conjugations:
-        for verb in verb_list:
-            conj1, conj2 = get_conjugation_from_fast_data(verb, fast_conjugations)
-            conjugations[verb] = (conj1, conj2)
-
-    # Save the results in custom format if the custom_format flag is True
-    if custom_format:
-        save_results_custom_format(classified_verbs, conjugations, output_file)
-    else:
-        save_results(classified_verbs, conjugations, output_file, include_conjugations)
-
+    # Save all three classifications
+    save_all_classifications(classified_verbs, verb_conjugations, destination_folder)
