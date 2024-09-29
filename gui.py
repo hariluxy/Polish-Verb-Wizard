@@ -12,6 +12,7 @@ class PolishVerbWizard:
         self.input_file = None
         self.output_file = None
         self.include_conjugations = BooleanVar()
+        self.custom_format = BooleanVar()  # New variable for custom format
 
         # GUI Elements
         Label(window, text="Polish Verb Wizard").pack()
@@ -25,6 +26,10 @@ class PolishVerbWizard:
         # Checkbox for conjugations
         self.conjugation_checkbox = Checkbutton(window, text="Include Conjugations", variable=self.include_conjugations)
         self.conjugation_checkbox.pack()
+
+        # Checkbox for custom format
+        self.custom_format_checkbox = Checkbutton(window, text="Save in CSS Format", variable=self.custom_format)
+        self.custom_format_checkbox.pack()
 
         # Run button
         Button(window, text="Run", command=self.run_classification).pack()
@@ -55,5 +60,19 @@ class PolishVerbWizard:
             return
         
         include_conjugations = self.include_conjugations.get()
-        process_verbs(self.input_file, self.output_file, include_conjugations)
+        use_custom_format = self.custom_format.get()  # Check if custom format is selected
+
+        # Read input file to check if it is empty
+        with open(self.input_file, 'r', encoding='utf-8') as file:
+            if not file.read().strip():
+                print("Input file is empty.")
+                return
+            
+        # Check which format to use
+        if use_custom_format:
+            process_verbs(self.input_file, self.output_file, include_conjugations, custom_format=True)
+        else:
+            process_verbs(self.input_file, self.output_file, include_conjugations, custom_format=False)
         print("Classification completed and results saved.")
+
+
