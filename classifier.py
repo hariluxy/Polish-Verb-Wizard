@@ -2,17 +2,17 @@ import morfeusz2
 
 def classify_verbs(verbs):
     """
-    Classifies verbs into perfective and imperfective aspects.
+    Classifies verbs into Imperfective, Perfective, Both or Unknown.
 
     Args:
         verbs (list): A list of verbs to classify.
 
     Returns:
-        dict: A dictionary with aspects as keys and lists of verbs as values.
+        dict: A dictionary with aspects as keys and lists of verbs as values. ????
     """
     morfeusz = morfeusz2.Morfeusz()
     classifications = {
-        'imperfective': [],  # Moved this to the top to adjust order
+        'imperfective': [], 
         'perfective': [],
         'both': [],
         'unknown': []
@@ -24,6 +24,7 @@ def classify_verbs(verbs):
         for ana in analyses:
             interp = ana[2]
             tags = interp[2].split(':')
+            
             # Check for aspect tags
             if 'imperf' in tags:
                 aspects.add('imperfective')

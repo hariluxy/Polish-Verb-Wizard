@@ -14,13 +14,13 @@ class PolishVerbWizard:
         self.include_conjugations = BooleanVar()
 
         # GUI Elements
-        Label(window, text="Polish Verb Classification").pack()
+        Label(window, text="Polish Verb Wizard").pack()
 
         # Load file button
-        Button(window, text="Load Verbs from .txt", command=self.load_file).pack()
+        Button(window, text="Load Verbs (.txt)", command=self.load_file).pack()
 
         # Save file button
-        Button(window, text="Choose where to save results", command=self.save_file).pack()
+        Button(window, text="Destination Folder", command=self.save_file).pack()
 
         # Checkbox for conjugations
         self.conjugation_checkbox = Checkbutton(window, text="Include Conjugations", variable=self.include_conjugations)
