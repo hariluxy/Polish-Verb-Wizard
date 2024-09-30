@@ -4,7 +4,7 @@
 
 ## 📖 Introduction
 
-Are you learning Polish and struggling with the complexities of verb aspects and conjugations? **Polish Verb Wizard** is here to help! This simple program automates the classification of Polish verbs and assists you in understanding their conjugation patterns, making your language learning journey smoother and more efficient.
+Are you learning Polish and struggling with the complexities of verb aspects and conjugations? **Polish Verb Wizard** is here to help! This simple program automates the classification of Polish verbs and assists you in understanding their conjugation patterns, by providing you with the necessary information to identify their conjugation group. In consequence making your language learning journey smoother and more efficient.
 
 ## 🚀 Features
 
@@ -12,7 +12,7 @@ Are you learning Polish and struggling with the complexities of verb aspects and
 
 1. **Verb Classification**
 
-   - **Automatic Analysis**: Upload a file containing a list of Polish verbs in infinitive, and the program will analyze each one.
+   - **Automatic Analysis**: Upload a file containing a list of Polish verbs in infinitive or write them directly, and the program will analyze each one.
    - **Detailed Categorization**: Generates a `1_verb_simple.txt` file where verbs are sorted into four categories:
      - **Imperfective**
      - **Perfective**
