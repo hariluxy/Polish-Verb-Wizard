@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import filedialog, messagebox
-from Operations.processing_operations import process_verbs_and_save
+from operations.processing_operations import process_verbs_and_save
 
 class PolishVerbWizard:
     def __init__(self, root):
