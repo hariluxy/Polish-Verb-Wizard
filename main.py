@@ -1,4 +1,4 @@
-from user_interface import PolishVerbWizard
+from GUI.user_interface import PolishVerbWizard
 from tkinter import Tk
 
 def main():

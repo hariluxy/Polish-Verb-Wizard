@@ -8,7 +8,7 @@ import csv
 
 
 # Path to conjugation dataset 
-CONJUGATION_DATA_PATH = 'C:/Users/Raque/Desktop/PGW/Polish-Verb-Wizard/fast_conjugation_data.tab'
+CONJUGATION_DATA_PATH = 'C:/Users/Raque/Desktop/PGW/Polish-Verb-Wizard/Dataset/fast_conjugation_data.tab'
 
 
 # Loads the whole data set into the conjugation dictionary
