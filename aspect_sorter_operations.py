@@ -1,23 +1,26 @@
-import morfeusz2
-
-def classify_verbs(verbs):
-    """
+"""
     Classifies verbs into Imperfective, Perfective, Both or Unknown.
 
-    Args:
-        verbs (list): A list of verbs to classify.
+    It uses morfeusz2 to perform the morphological analysis for Polish.
 
-    Returns:
-        dict: A dictionary with aspects as keys and lists of verbs as values. ????
-    """
-    morfeusz = morfeusz2.Morfeusz()
-    classifications = {
+"""
+
+
+import morfeusz2
+
+def verbs_by_aspect(verbs):
+
+    morfeusz = morfeusz2.Morfeusz() # Init morfeusz2
+
+    # Prepare a dictionary
+    verb_aspect = {
         'imperfective': [], 
         'perfective': [],
         'both': [],
         'unknown': []
     }
 
+    # Loop over the verbs
     for verb in verbs:
         analyses = morfeusz.analyse(verb)
         aspects = set()
@@ -30,12 +33,15 @@ def classify_verbs(verbs):
                 aspects.add('imperfective')
             if 'perf' in tags:
                 aspects.add('perfective')
+
+        # Classify the verbs based on aspects
         if aspects == {'imperfective'}:
-            classifications['imperfective'].append(verb)
+            verb_aspect['imperfective'].append(verb)
         elif aspects == {'perfective'}:
-            classifications['perfective'].append(verb)
+            verb_aspect['perfective'].append(verb)
         elif aspects == {'imperfective', 'perfective'}:
-            classifications['both'].append(verb)
+            verb_aspect['both'].append(verb)
         else:
-            classifications['unknown'].append(verb)
-    return classifications
+            verb_aspect['unknown'].append(verb)
+
+    return verb_aspect
