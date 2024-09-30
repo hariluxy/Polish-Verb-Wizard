@@ -8,7 +8,7 @@ class PolishVerbWizard:
         self.root.title("Polish Verb Wizard by Hariluxy")
         
         '''
-        # Instructions labels configured for maximum clarity
+        # Instructions configured for maximum clarity
         '''
         # Label to highlight "Follow these instructions:"
         self.instructions_title = tk.Label(root, text="Follow these instructions:", font=("Helvetica", 12, "bold"))
@@ -57,7 +57,7 @@ class PolishVerbWizard:
         self.message_display.config(state='normal')  # Enable editing
         self.message_display.delete(1.0, tk.END)  # Clear previous messages
         self.message_display.insert(tk.END, message)  # Insert the new message
-        self.message_display.tag_add("center", 1.0, "end-1c")  # Apply the "center" tag to the text, excluding the final newline
+        self.message_display.tag_add("center", 1.0, "end-1c")  # Apply the "center" tag to the text
         self.message_display.config(state='disabled')  # Disable editing
 
     def load_verb_file(self):
