@@ -6,6 +6,14 @@ from operations_verb.save_operations import save_verb_simple, save_verb_conjugat
 
 class TestSaveOperations(unittest.TestCase):
 
+    @classmethod
+    def setUpClass(cls):
+        print("\nStarting the verb save operations test.")
+
+    @classmethod
+    def tearDownClass(cls):
+        print("\nThe verb save operations test has been successful.")
+
     def setUp(self):
 
         # Verbs already classified
