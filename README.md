@@ -27,7 +27,7 @@ Are you learning Polish and struggling with the complexities of verb aspects and
 First, install the necessary dependencies:
 
 ```bash
-pip install -r requirements.txt
+pip install morfeusz2
 ```
 Second, proceed to execute:
 ```bash
