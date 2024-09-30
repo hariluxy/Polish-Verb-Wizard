@@ -4,9 +4,9 @@
 
 """
 
-from aspect_sorter_operations import verbs_by_aspect
-from load_conjugation_data_operations import load_conjugation_data, get_conjugation
-from save_operations import save_all_methods
+from Operations.aspect_sorter_operations import verbs_by_aspect
+from Operations.load_conjugation_data_operations import load_conjugation_data, get_conjugation
+from Operations.save_operations import save_all_methods
 
 def process_verbs_and_save(verb_file_path, destination_folder):
   
