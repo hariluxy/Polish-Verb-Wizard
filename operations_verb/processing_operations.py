@@ -16,23 +16,40 @@ Parameters:
     - destination_folder: The folder where results will be saved.
     - from_file: Whether the input is a file or a list of verbs.
 """
-def process_verbs_and_save(verb_input, destination_folder, from_file=True):
-  
-    # Read verbs from the input file or use the provided list
+
+
+def load_verbs_list(verb_input, from_file=True):
+
+    # Load verbs from file file
     if from_file:
         with open(verb_input, 'r', encoding='utf-8') as file:
             verbs = [line.strip() for line in file.readlines() if line.strip()]
+    # Load verbs from manual input
     else:
         verbs = verb_input
+    
+    return verbs
+
+
+def add_data_verbs(verb_input, destination_folder):
 
     # Classify the verbs by aspect
-    verbs_aspect = verbs_by_aspect(verbs)
+    verb_list = verbs_by_aspect(verb_input)
 
     # Load conjugation data
     loaded_conjugations = load_conjugation_data()
 
-    # Obtain the matching conjugation
-    verb_conjugation = {verb: get_conjugation(verb, loaded_conjugations) for verb in verbs}
+    # Loop over the verbs in the verb_list to update conjugations
+    for verb in verb_list:
+        # Retrieve conjugation for each verb
+        first_conj, third_conj = get_conjugation(verb, loaded_conjugations)
 
-    # Save all three classifications
-    save_all_methods(verbs_aspect, verb_conjugation, destination_folder)
+        # Update the verb_list with the conjugations
+        verb_list[verb]['first_person_conjugation'] = first_conj
+        verb_list[verb]['third_person_conjugation'] = third_conj
+
+     # Save all three classifications
+    save_all_methods(verb_list, destination_folder)
+
+   
+
