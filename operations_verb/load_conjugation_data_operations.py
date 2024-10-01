@@ -1,13 +1,11 @@
-"""
-    Loads the conjugation dataset.
-
-    The Fast-Conjugation-Dataset contains three rows: Infinitive, First conjugation, Second Conjugation
-"""
-
 import os
 import csv
 import warnings
 from pathlib import Path
+
+"""
+    The Fast-Conjugation-Dataset contains three rows: Infinitive, First conjugation, Second Conjugation
+"""
 
 
 # Obtain the dataset from any computer. It gets the current directory of the script and navigate to the 'conjugation_dataset' folder

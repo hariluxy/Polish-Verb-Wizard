@@ -1,23 +1,9 @@
-
-"""
-    Loads the verbs from the input file, It performs the operations with the verbs and saves the results in three formats.
-
-"""
-
 from operations_verb.aspect_sorter_operations import verbs_by_aspect
 from operations_verb.load_conjugation_data_operations import load_conjugation_data, get_conjugation
 from operations_verb.save_operations import save_all_methods
 
-"""
-Process verbs either from a file or a manually provided list.
-    
-Parameters:
-    - verb_input: Either a file path (if from_file=True) or a list of verbs.
-    - destination_folder: The folder where results will be saved.
-    - from_file: Whether the input is a file or a list of verbs.
-"""
 
-
+# Loads the verbs provided by the user
 def load_verbs_list(verb_input, from_file=True):
 
     # Load verbs from file file
@@ -30,8 +16,8 @@ def load_verbs_list(verb_input, from_file=True):
     
     return verbs
 
-
-def add_data_verbs(verb_input, destination_folder):
+# The aspect and the conjugations are added here
+def add_data_verbs(verb_input):
 
     # Classify the verbs by aspect
     verb_list = verbs_by_aspect(verb_input)
@@ -48,8 +34,8 @@ def add_data_verbs(verb_input, destination_folder):
         verb_list[verb]['first_person_conjugation'] = first_conj
         verb_list[verb]['third_person_conjugation'] = third_conj
 
-     # Save all three classifications
-    save_all_methods(verb_list, destination_folder)
+    return verb_list
+
 
    
 
