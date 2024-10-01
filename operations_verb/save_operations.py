@@ -1,6 +1,6 @@
+import os
+
 """
-     The saving process takes place here, functions for each method determine the format of the output. 
-     
      The saving methods:
         -First Method: The verbs are divided in four categories (Imperfective, Perfective, Both and Unknown) 
 
@@ -9,8 +9,6 @@
         -Third Method: Provides a SCSV file with this format (verb;aspect;conjugation1;conjugation2) 
          perfect for flashcards or databases.
 """
-
-import os
         
 # Write only the verb name for the first method 
 def write_simple_method(file, verb_list, header, first_header=True):
