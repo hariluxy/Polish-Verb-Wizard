@@ -13,109 +13,56 @@
 
 import os
 
-
+# Helper function to write verbs to file
+def write_verbs(file, verbs, header, loaded_conjugations=None, scsv_format=False, add_newline=True):
+    if not scsv_format:  # Only write the header if it's not in SCSV format
+        if add_newline:
+            file.write(f"\n{header} Verbs:\n")
+        else:
+            file.write(f"{header} Verbs:\n")  # No newline for the first header
     
+    for verb in verbs:
+        if loaded_conjugations and verb in loaded_conjugations:
+            conj1, conj2 = loaded_conjugations[verb]
+            if scsv_format:
+                # Write verb in the required SCSV format without any headers
+                file.write(f"{verb};{header.lower()};{conj1};{conj2}\n")
+            else:
+                file.write(f"{verb} - {conj1}, {conj2}\n")
+        else:
+            if scsv_format:
+                # Write verb in SCSV format without conjugations if not found
+                file.write(f"{verb};{header.lower()}\n")
+            else:
+                file.write(f"{verb}\n")
+
+
 # First method: Saves the verbs classified by aspect.
-
 def save_verb_simple(verbs_aspect, file_path):
-  
     with open(file_path, 'w', encoding='utf-8') as file:
-
-        # Imperfective list
-        file.write("Imperfective Verbs:\n")
-        for verb in verbs_aspect["imperfective"]:
-            file.write(f"{verb}\n")
-
-        # Perfective list
-        file.write("\nPerfective Verbs:\n")
-        for verb in verbs_aspect["perfective"]:
-            file.write(f"{verb}\n")
-
-        # Both imperfective and perfective list
-        file.write("\nBoth Verbs:\n")
-        for verb in verbs_aspect["both"]:
-            file.write(f"{verb}\n")
-        
-        # Unknown or not recognized list
-        file.write("\nUnknown Verbs:\n")
-        for verb in verbs_aspect["unknown"]:
-            file.write(f"{verb}\n")
-
+        write_verbs(file, verbs_aspect["imperfective"], "Imperfective", add_newline=False)  # First section, no newline
+        write_verbs(file, verbs_aspect["perfective"], "Perfective")  # Subsequent sections with newline
+        write_verbs(file, verbs_aspect["both"], "Both")
+        write_verbs(file, verbs_aspect["unknown"], "Unknown")
 
 # Second method: Saves the verbs classified by aspect with their conjugations.
-    #Format: verb - 1st_person_singular, 3rd_person_singular
-
 def save_verb_conjugation(verbs_aspect, loaded_conjugations, file_path):
-    
     with open(file_path, 'w', encoding='utf-8') as file:
+        write_verbs(file, verbs_aspect["imperfective"], "Imperfective", loaded_conjugations, add_newline=False)
+        write_verbs(file, verbs_aspect["perfective"], "Perfective", loaded_conjugations)
+        write_verbs(file, verbs_aspect["both"], "Both", loaded_conjugations)
+        write_verbs(file, verbs_aspect["unknown"], "Unknown")
 
-        # Imperfective list
-        file.write("Imperfective Verbs:\n")
-        for verb in verbs_aspect["imperfective"]:
-            if verb in loaded_conjugations:
-                conj1, conj2 = loaded_conjugations[verb]
-                file.write(f"{verb} - {conj1}, {conj2}\n")
-            else:
-                file.write(f"{verb}\n")
-        
-        # Perfective list
-        file.write("\nPerfective Verbs:\n")
-        for verb in verbs_aspect["perfective"]:
-            if verb in loaded_conjugations:
-                conj1, conj2 = loaded_conjugations[verb]
-                file.write(f"{verb} - {conj1}, {conj2}\n")
-            else:
-                file.write(f"{verb}\n")
-        
-        # Both imperfective and perfective list
-        file.write("\nBoth Verbs:\n")
-        for verb in verbs_aspect["both"]:
-            if verb in loaded_conjugations:
-                conj1, conj2 = loaded_conjugations[verb]
-                file.write(f"{verb} - {conj1}, {conj2}\n")
-            else:
-                file.write(f"{verb}\n")
-        
-         # Unknown or not recognized list (No conjugations included in this list)
-        file.write("\nUnknown Verbs:\n")
-        for verb in verbs_aspect["unknown"]:
-            file.write(f"{verb}\n")
-
- #Third method: Saves the verbs in a SCSV format:
-    #Format: verb;aspect;1st_person_singular;3rd_person_singular
-
+# Third method: Saves the verbs in a SCSV format.
 def save_verb_SCSV(verbs_aspect, loaded_conjugations, file_path):
-    
     with open(file_path, 'w', encoding='utf-8') as file:
-
-        # Imperfective list
-        for verb in verbs_aspect["imperfective"]:
-            if verb in loaded_conjugations:
-                conj1, conj2 = loaded_conjugations[verb]
-                file.write(f"{verb};imperfective;{conj1};{conj2}\n")
-            else:
-                file.write(f"{verb};imperfective\n")
-        
-        # Perfective list
-        for verb in verbs_aspect["perfective"]:
-            if verb in loaded_conjugations:
-                conj1, conj2 = loaded_conjugations[verb]
-                file.write(f"{verb};perfective;{conj1};{conj2}\n")
-            else:
-                file.write(f"{verb};perfective\n")
-        
-        ## Both imperfective and perfective list
-        for verb in verbs_aspect["both"]:
-            if verb in loaded_conjugations:
-                conj1, conj2 = loaded_conjugations[verb]
-                file.write(f"{verb};both;{conj1};{conj2}\n")
-            else:
-                file.write(f"{verb};both\n")
+        # No headers needed, just write the verbs directly
+        write_verbs(file, verbs_aspect["imperfective"], "imperfective", loaded_conjugations, scsv_format=True)
+        write_verbs(file, verbs_aspect["perfective"], "perfective", loaded_conjugations, scsv_format=True)
+        write_verbs(file, verbs_aspect["both"], "both", loaded_conjugations, scsv_format=True)
 
 # It saves each method in a different file
-
 def save_all_methods(verbs_aspect, loaded_conjugations, destination_folder):
-    
     # Define paths for each output file
     simple_path = os.path.join(destination_folder, '1_verb_simple.txt')
     conjugation_path = os.path.join(destination_folder, '2_verb_conjugation.txt')
@@ -129,4 +76,3 @@ def save_all_methods(verbs_aspect, loaded_conjugations, destination_folder):
 
     # Save Third Method
     save_verb_SCSV(verbs_aspect, loaded_conjugations, detailed_path)
-
