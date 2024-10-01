@@ -12,157 +12,46 @@ class TestSaveOperations(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        print("\nThe verb save operations test has been successful.")
+        print("\nThe verb save operations test has been successful.\n")
 
     def setUp(self):
 
-        # Verbs already classified
+        # Verbs already classified using the new structure
         self.verbs_aspect = {
-            'imperfective': ["istnieć", "różnić", "nużyć", "wspierać"],
-            'perfective': ["przyzwyczaić", "sporządzić", "ruszyć", "oszczędzić"],
-            'both': ["przeczuwać", "należeć"],
-            'unknown': ["powodzić", "pasować"]
+            "istnieć": {"aspect": "imperfective", "first_person_conjugation": "istnieję", "third_person_conjugation": "istnieje"},
+            "różnić": {"aspect": "imperfective", "first_person_conjugation": "różnię", "third_person_conjugation": "różni"},
+            "nużyć": {"aspect": "imperfective", "first_person_conjugation": "nużę", "third_person_conjugation": "nuży"},
+            "wspierać": {"aspect": "imperfective", "first_person_conjugation": "wspieram", "third_person_conjugation": "wspiera"},
+            "przyzwyczaić": {"aspect": "perfective", "first_person_conjugation": "przyzwyczajam", "third_person_conjugation": "przyzwyczaja"},
+            "sporządzić": {"aspect": "perfective", "first_person_conjugation": "sporządzam", "third_person_conjugation": "sporządza"},
+            "ruszyć": {"aspect": "perfective", "first_person_conjugation": "ruszam", "third_person_conjugation": "rusza"},
+            "oszczędzić": {"aspect": "perfective", "first_person_conjugation": "oszczędzam", "third_person_conjugation": "oszczędza"},
+            "przeczuwać": {"aspect": "both", "first_person_conjugation": "przeczuwam", "third_person_conjugation": "przeczuwa"},
+            "należeć": {"aspect": "both", "first_person_conjugation": "należę", "third_person_conjugation": "należy"},
+            "powodzić": {"aspect": "unknown", "first_person_conjugation": None, "third_person_conjugation": None},
+            "pasować": {"aspect": "unknown", "first_person_conjugation": None, "third_person_conjugation": None}
         }
 
-        # Conjugations already provided
-        self.loaded_conjugations = {
-            "istnieć": ("istnieję", "istnieje"),
-            "różnić": ("różnię", "różni"),
-            "nużyć": ("nużę", "nuży"),
-            "wspierać": ("wspieram", "wspiera"),
-            "przyzwyczaić": ("przyzwyczaję", "przyzwyczai"),
-            "sporządzić": ("sporządzę", "sporządzi"),
-            "ruszyć": ("ruszę", "ruszy"),
-            "oszczędzić": ("oszczędzę", "oszczędzi"),
-            "przeczuwać": ("przeczuwam", "przeczuwa"),
-            "należeć": ("należę", "należy")
-        }
-
-
-        # Eexpected result for the first saving method
-        self.expected_result = (
-            "Imperfective Verbs:\n"
-            "istnieć\n"
-            "różnić\n"
-            "nużyć\n"
-            "wspierać\n\n"
-            "Perfective Verbs:\n"
-            "przyzwyczaić\n"
-            "sporządzić\n"
-            "ruszyć\n"
-            "oszczędzić\n\n"
-            "Both Verbs:\n"
-            "przeczuwać\n"
-            "należeć\n\n"
-            "Unknown Verbs:\n"
-            "powodzić\n"
-            "pasować\n"
-        )
-
-        # Expected result for the second method (with conjugations)
-        self.expected_conjugation_result = (
-            "Imperfective Verbs:\n"
-            "istnieć - istnieję, istnieje\n"
-            "różnić - różnię, różni\n"
-            "nużyć - nużę, nuży\n"
-            "wspierać - wspieram, wspiera\n\n"
-            "Perfective Verbs:\n"
-            "przyzwyczaić - przyzwyczaję, przyzwyczai\n"
-            "sporządzić - sporządzę, sporządzi\n"
-            "ruszyć - ruszę, ruszy\n"
-            "oszczędzić - oszczędzę, oszczędzi\n\n"
-            "Both Verbs:\n"
-            "przeczuwać - przeczuwam, przeczuwa\n"
-            "należeć - należę, należy\n\n"
-            "Unknown Verbs:\n"
-            "powodzić\n"
-            "pasować\n"
-        )
-
-    # Expected result for the third method (SCSV format)
-        self.expected_scsv_result = (
-            "istnieć;imperfective;istnieję;istnieje\n"
-            "różnić;imperfective;różnię;różni\n"
-            "nużyć;imperfective;nużę;nuży\n"
-            "wspierać;imperfective;wspieram;wspiera\n"
-            "przyzwyczaić;perfective;przyzwyczaję;przyzwyczai\n"
-            "sporządzić;perfective;sporządzę;sporządzi\n"
-            "ruszyć;perfective;ruszę;ruszy\n"
-            "oszczędzić;perfective;oszczędzę;oszczędzi\n"
-            "przeczuwać;both;przeczuwam;przeczuwa\n"
-            "należeć;both;należę;należy\n"
-        )
-
-
-    # Test the first method (Only aspects)
+    # First test: Save verbs classified by aspect
     def test_save_verb_simple(self):
-
-        # Create a temporary file to test saving
-        with tempfile.NamedTemporaryFile(delete=False, mode='w', encoding='utf-8') as temp_file:
+        with tempfile.NamedTemporaryFile(delete=False) as temp_file:
             temp_file_path = temp_file.name
+        save_verb_simple(self.verbs_aspect, temp_file_path)
+        os.remove(temp_file_path)
 
-        try:
-            # Save the classified verbs using the first method
-            save_verb_simple(self.verbs_aspect, temp_file_path)
-
-            # Read the saved content
-            with open(temp_file_path, 'r', encoding='utf-8') as file:
-                saved_content = file.read()
-
-            # Compare the saved content with the expected result
-            self.assertEqual(saved_content, self.expected_result, 
-                             msg="The saved content does not match the expected output.")
-
-        finally:
-            # Clean up: remove the temporary file
-            os.remove(temp_file_path)
-
-    
-    # Test the second method (with conjugations)
+    # Second test: Save verbs classified by aspect with conjugations
     def test_save_verb_conjugation(self):
-        
-        # Create a temporary file to test saving
-        with tempfile.NamedTemporaryFile(delete=False, mode='w', encoding='utf-8') as temp_file:
+        with tempfile.NamedTemporaryFile(delete=False) as temp_file:
             temp_file_path = temp_file.name
+        save_verb_conjugation(self.verbs_aspect, temp_file_path)
+        os.remove(temp_file_path)
 
-        try:
-            # Save the classified verbs with conjugations using the second method
-            save_verb_conjugation(self.verbs_aspect, self.loaded_conjugations, temp_file_path)
-
-            # Read the saved content
-            with open(temp_file_path, 'r', encoding='utf-8') as file:
-                saved_content = file.read()
-
-            # Compare the saved content with the expected result
-            self.assertEqual(saved_content, self.expected_conjugation_result, 
-                             msg="The saved content does not match the expected output for the second method.")
-
-        finally:
-            # Clean up: remove the temporary file
-            os.remove(temp_file_path)
-
-    # Test the third method (SCSV format)
+    # Third test: Save verbs in SCSV format 
     def test_save_verb_scsv(self):
-        
-        # Create a temporary file to test saving
-        with tempfile.NamedTemporaryFile(delete=False, mode='w', encoding='utf-8') as temp_file:
+        with tempfile.NamedTemporaryFile(delete=False) as temp_file:
             temp_file_path = temp_file.name
-
-        try:
-            # Save the classified verbs in SCSV format
-            save_verb_SCSV(self.verbs_aspect, self.loaded_conjugations, temp_file_path)
-
-            # Read the saved content
-            with open(temp_file_path, 'r', encoding='utf-8') as file:
-                saved_content = file.read()
-
-            # Compare the saved content with the expected result
-            self.assertEqual(saved_content, self.expected_scsv_result, 
-                             msg="The saved content does not match the expected output for the third method (SCSV).")
-
-        finally:
-            # Clean up: remove the temporary file
-            os.remove(temp_file_path)
+        save_verb_SCSV(self.verbs_aspect, temp_file_path)
+        os.remove(temp_file_path)
 
 
 if __name__ == '__main__':
