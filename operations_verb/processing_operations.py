@@ -31,7 +31,7 @@ def load_verbs_list(verb_input, from_file=True):
     return verbs
 
 
-def add_data_verbs(verb_input, destination_folder, from_file=True):
+def add_data_verbs(verb_input, destination_folder):
 
     # Classify the verbs by aspect
     verb_list = verbs_by_aspect(verb_input)

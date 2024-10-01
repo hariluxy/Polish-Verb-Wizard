@@ -13,8 +13,8 @@
 
 import os
 
-# Helper function to write verbs to file
-def write_verbs(file, verbs, header, scsv_format=False, add_newline=True):
+
+def write_verbs(file, verbs, header, conjugation_format=False, scsv_format=False, add_newline=True):
     if not scsv_format:  # Only write the header if it's not in SCSV format
         if add_newline:
             file.write(f"\n{header} Verbs:\n")
@@ -22,25 +22,25 @@ def write_verbs(file, verbs, header, scsv_format=False, add_newline=True):
             file.write(f"{header} Verbs:\n")  # No newline for the first header
     
     for verb, data in verbs.items():
-        aspect = data["aspect"]
         conj1 = data["first_person_conjugation"]
         conj2 = data["third_person_conjugation"]
 
+        # Write verb in the required SCSV format
         if scsv_format:
-            # Write verb in the required SCSV format without any headers
-            file.write(f"{verb};{aspect};{conj1};{conj2}\n")
+            file.write(f"{verb};{data['aspect']};{conj1};{conj2}\n")
+        # Write in simple format with conjugations
+        elif conjugation_format:
+            file.write(f"{verb} - {conj1}, {conj2}\n")
+        # Write only the verb name for the simple method 
         else:
-            if conj1 and conj2:
-                file.write(f"{verb} - {conj1}, {conj2}\n")
-            else:
-                file.write(f"{verb}\n")
+            file.write(f"{verb}\n")
 
 
 # First method: Saves the verbs classified by aspect.
 def save_verb_simple(verb_list, file_path):
     with open(file_path, 'w', encoding='utf-8') as file:
-        write_verbs(file, {k: v for k, v in verb_list.items() if v["aspect"] == "imperfective"}, "Imperfective", add_newline=False)  # First section, no newline
-        write_verbs(file, {k: v for k, v in verb_list.items() if v["aspect"] == "perfective"}, "Perfective")  # Subsequent sections with newline
+        write_verbs(file, {k: v for k, v in verb_list.items() if v["aspect"] == "imperfective"}, "Imperfective", add_newline=False) 
+        write_verbs(file, {k: v for k, v in verb_list.items() if v["aspect"] == "perfective"}, "Perfective")  
         write_verbs(file, {k: v for k, v in verb_list.items() if v["aspect"] == "both"}, "Both")
         write_verbs(file, {k: v for k, v in verb_list.items() if v["aspect"] == "unknown"}, "Unknown")
 
@@ -48,10 +48,9 @@ def save_verb_simple(verb_list, file_path):
 # Second method: Saves the verbs classified by aspect with their conjugations.
 def save_verb_conjugation(verb_list, file_path):
     with open(file_path, 'w', encoding='utf-8') as file:
-        write_verbs(file, {k: v for k, v in verb_list.items() if v["aspect"] == "imperfective"}, "Imperfective", add_newline=False)
-        write_verbs(file, {k: v for k, v in verb_list.items() if v["aspect"] == "perfective"}, "Perfective")
-        write_verbs(file, {k: v for k, v in verb_list.items() if v["aspect"] == "both"}, "Both")
-        write_verbs(file, {k: v for k, v in verb_list.items() if v["aspect"] == "unknown"}, "Unknown")
+        write_verbs(file, {k: v for k, v in verb_list.items() if v["aspect"] == "imperfective"}, "Imperfective",conjugation_format=True, add_newline=False)
+        write_verbs(file, {k: v for k, v in verb_list.items() if v["aspect"] == "perfective"}, "Perfective", conjugation_format=True)
+        write_verbs(file, {k: v for k, v in verb_list.items() if v["aspect"] == "both"}, "Both", conjugation_format=True)
 
 
 # Third method: Saves the verbs in a SCSV format.

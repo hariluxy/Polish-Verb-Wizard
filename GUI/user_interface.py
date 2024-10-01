@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import filedialog
-from operations_verb.processing_operations import load_verbs_list, process_verbs_and_save
+from operations_verb.processing_operations import load_verbs_list, add_data_verbs
 
 class PolishVerbWizard:
     def __init__(self, root):
@@ -99,12 +99,12 @@ class PolishVerbWizard:
             # Verbs manually introduced
             if manual_verbs:
                 verbs = [verb.strip() for verb in manual_verbs.split(',')]
-                # load_verbs_list(verbs, from_file=False)
-                process_verbs_and_save(verbs, self.save_folder_path, from_file=False)
+                verb_list = load_verbs_list(verbs, from_file=False)
+                add_data_verbs(verb_list, self.save_folder_path)
                 self.display_message("Results from manual input generated and saved successfully.")
             else: # Verbs from file
-                # load_verbs_list(verbs, from_file=True)
-                process_verbs_and_save(self.verb_file_path, self.save_folder_path, from_file=True)
+                verb_list = load_verbs_list(self.verb_file_path, from_file=True)
+                add_data_verbs(verb_list, self.save_folder_path)
                 self.display_message("Results generated and saved successfully.")
 
         except Exception as e:

@@ -5,11 +5,11 @@ class TestVerbAspectSorting(unittest.TestCase):
     
     @classmethod
     def setUpClass(cls):
-        print("\nStarting the verb aspect classification test.")
+        print("\n1-Starting the verb aspect classification test.")
 
     @classmethod
     def tearDownClass(cls):
-        print("\nThe verb aspect classification test has been successful.\n")
+        print("\nSuccessful.\n")
 
 
     def setUp(self):
